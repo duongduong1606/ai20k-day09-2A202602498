@@ -8,4 +8,7 @@ RUN python -m venv /home/airflow/lab-venv \
  && /home/airflow/lab-venv/bin/pip install --no-cache-dir -r /tmp/requirements-lab.txt \
  && /home/airflow/lab-venv/bin/python -c "import duckdb; c = duckdb.connect(); [c.execute(f'INSTALL {e}') for e in ('httpfs','delta','postgres')]"
 COPY --chmod=755 docker/airflow-entrypoint.sh /airflow-entrypoint.sh
+USER root
+RUN sed -i 's/\r$//' /airflow-entrypoint.sh
+USER airflow
 ENTRYPOINT ["/airflow-entrypoint.sh"]
